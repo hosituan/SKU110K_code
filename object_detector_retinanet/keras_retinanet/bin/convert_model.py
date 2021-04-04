@@ -18,7 +18,7 @@ limitations under the License.
 
 import argparse
 import sys
-
+sys.path.insert(1,"/content/drive/My Drive/SKU110K_code")
 
 from object_detector_retinanet.keras_retinanet import models
 

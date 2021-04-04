@@ -7,7 +7,8 @@ import os
 import pandas
 import scipy
 from scipy.stats import chi2
-
+import sys
+sys.path.insert(1,"/content/drive/My Drive/SKU110K_code")
 from object_detector_retinanet.keras_retinanet.utils.Boxes import BOX, extract_boxes_from_edge_boxes, \
     perform_nms_on_image_dataframe
 from object_detector_retinanet.keras_retinanet.utils.CollapsingMoG import collapse
@@ -75,13 +76,13 @@ class DuplicateMerger(object):
         filtered_data = pandas.DataFrame(columns=data.columns)
         for i, candidate in candidates.items():
             label = candidate['original_detection_ids']
-            original_detections = data.ix[label]
+            original_detections = data.iloc[label]
             original_detections[
                 'avg_score'] = 0.5 * original_detections.confidence + 0.5 * original_detections.hard_score
             best_detection_id = original_detections.avg_score.argmax()
             # best_detection_id = original_detections.confidence.argmax()
             # best_detection_id = original_detections.hard_score.argmax()
-            best_detection = original_detections.ix[best_detection_id].copy()
+            best_detection = original_detections.iloc[best_detection_id].copy()
 
             # The following code creates the median bboxes
             # original_detections = original_detections[original_detections.confidence > 0.5]
@@ -210,14 +211,14 @@ class DuplicateMerger(object):
                     continue
                 cnt_i = cnts[i]
                 cnt_j = cnts[j]
-                ct_i_to_pt_j = -cv2.pointPolygonTest(cnt_i, (mu[j][0], mu[j][1]), measureDist=True)
-                ct_j_to_pt_i = -cv2.pointPolygonTest(cnt_j, (mu[i][0], mu[i][1]), measureDist=True)
-                if ct_i_to_pt_j <= 0 or ct_j_to_pt_i <= 0:
-                    scaled_distances[i, j] = -numpy.inf
-                else:
-                    pt_dist = distances[i, j]
-                    ct_i_to_ct_j = ct_i_to_pt_j - pt_dist + ct_j_to_pt_i
-                    scaled_distances[i, j] = ct_i_to_ct_j
+                # ct_i_to_pt_j = -cv2.pointPolygonTest(cnt_i, (mu[j][0], mu[j][1]), measureDist=True)
+                # ct_j_to_pt_i = -cv2.pointPolygonTest(cnt_j, (mu[i][0], mu[i][1]), measureDist=True)
+                # if ct_i_to_pt_j <= 0 or ct_j_to_pt_i <= 0:
+                #     scaled_distances[i, j] = -numpy.inf
+                # else:
+                #     pt_dist = distances[i, j]
+                #     ct_i_to_ct_j = ct_i_to_pt_j - pt_dist + ct_j_to_pt_i
+                #     scaled_distances[i, j] = ct_i_to_ct_j
         scaled_distances = numpy.triu(scaled_distances)
         i_s, j_s = numpy.unravel_index(numpy.argsort(scaled_distances, axis=None), scaled_distances.shape)
         to_remove = []

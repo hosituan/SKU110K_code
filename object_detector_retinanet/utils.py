@@ -6,7 +6,7 @@ __author__ = 'roeiherz'
 
 FILE_EXISTS_ERROR = (17, 'File exists')
 
-IMG_FOLDER = 'images'
+IMG_FOLDER = 'annotations'
 ANNOTATION_FOLDER = 'annotations'
 DEBUG_MODE = False #'ubuntu' not in os.environ['HOME']
 if DEBUG_MODE:
@@ -38,7 +38,7 @@ def create_folder(path):
 
 
 def root_dir():
-    return os.path.join(os.getenv("HOME"), 'Documents', 'SKU110K')
+    return os.path.join('/content/drive/My Drive/SKU110K_code', 'Documents', 'SKU110K')
 
 
 def image_path():

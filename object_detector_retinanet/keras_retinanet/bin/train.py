@@ -20,6 +20,7 @@ import argparse
 import functools
 import os
 import sys
+sys.path.insert(1,"/content/drive/My Drive/SKU110K_code")
 import time
 import warnings
 
@@ -328,8 +329,8 @@ def parse_args(args):
     parser.add_argument('--multi-gpu', help='Number of GPUs to use for parallel processing.', type=int, default=0)
     parser.add_argument('--multi-gpu-force', help='Extra flag needed to enable (experimental) multi-gpu support.',
                         action='store_true')
-    parser.add_argument('--epochs', help='Number of epochs to train.', type=int, default=150)
-    parser.add_argument('--steps', help='Number of steps per epoch.', type=int, default=10000)
+    parser.add_argument('--epochs', help='Number of epochs to train.', type=int, default=10)
+    parser.add_argument('--steps', help='Number of steps per epoch.', type=int, default=100)
     parser.add_argument('--snapshot-path',
                         help='Path to store snapshots of models during training (defaults to \'./snapshots\')',
                         default=args_snapshot_path)
