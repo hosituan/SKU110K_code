@@ -150,7 +150,7 @@ def create_callbacks(model, training_model, prediction_model, validation_generat
             batch_size=args.batch_size,
             write_graph=True,
             write_grads=False,
-            write_images=True,
+            write_images=False,
             embeddings_freq=0,
             embeddings_layer_names=None,
             embeddings_metadata=None
@@ -172,8 +172,6 @@ def create_callbacks(model, training_model, prediction_model, validation_generat
         checkpoint = RedirectModel(checkpoint, model)
         callbacks.append(checkpoint)
     
-    tb = keras.callbacks.TensorBoard(log_dir="/content/scalars")
-    callbacks.append(tb)
     callbacks.append(keras.callbacks.ReduceLROnPlateau(
         monitor='loss',
         factor=0.1,
