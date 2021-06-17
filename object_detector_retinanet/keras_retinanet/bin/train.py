@@ -350,6 +350,7 @@ def parse_args(args):
                         default=args_snapshot_path)
     parser.add_argument('--tensorboard-dir', help='Log directory for Tensorboard output',
                         default=args_tensorboard_dir)
+    parser.add_argument('--tensorboard-freq', help='Update frequency for Tensorboard output. Values \'epoch\', \'batch\' or int', default='batch')
     parser.add_argument('--no-snapshots', help='Disable saving snapshots.', dest='snapshots', action='store_false')
     parser.add_argument('--no-evaluation', help='Disable per epoch evaluation.', dest='evaluation',
                         action='store_false')
@@ -367,8 +368,6 @@ def parse_args(args):
     parser.add_argument('--reduce-lr-factor', help='When learning rate is reduced due to reduce_lr_patience, multiply by reduce_lr_factor', type=float, default=0.1)
     parser.add_argument('--group-method',     help='Determines how images are grouped together', type=str, default='ratio', choices=['none', 'random', 'ratio'])
 
-    
-    parser.add_argument('--tensorboard-freq', help='Update frequency for Tensorboard output. Values \'epoch\', \'batch\' or int', default='batch')
     return check_args(parser.parse_args(args))
 
 
