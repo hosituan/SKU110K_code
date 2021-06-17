@@ -172,7 +172,7 @@ def create_callbacks(model, training_model, prediction_model, validation_generat
         checkpoint = RedirectModel(checkpoint, model)
         callbacks.append(checkpoint)
     
-    tb = tf.keras.callbacks.TensorBoard(log_dir="/content/scalars")
+    tb = keras.callbacks.TensorBoard(log_dir="/content/scalars")
     callbacks.append(tb)
     callbacks.append(keras.callbacks.ReduceLROnPlateau(
         monitor='loss',
