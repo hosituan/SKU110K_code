@@ -28,7 +28,6 @@ import keras
 import keras.preprocessing.image
 import tensorflow as tf
 from keras.utils import multi_gpu_model
-import tensorboardcolab as tb
 
 
 # Allow relative imports when being executed as script.
@@ -179,11 +178,8 @@ def create_callbacks(model, training_model, prediction_model, validation_generat
         checkpoint = RedirectModel(checkpoint, model)
         callbacks.append(checkpoint)
 
-    tbCallBack = tf.keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=False)
-
-    tbc = tb.TensorBoardColab()
-    tensorboardCallBack = tb.TensorBoardColabCallback(tbc)
-    callbacks.append(tensorboardCallBack)
+    tbCallBack = tf.keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=1, write_graph=True, write_images=False)
+    callbacks.append(tbCallBack)
     callbacks.append(keras.callbacks.ReduceLROnPlateau(
         monitor='loss',
         factor=0.1,
