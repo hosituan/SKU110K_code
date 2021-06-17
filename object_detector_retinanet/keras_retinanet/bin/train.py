@@ -145,12 +145,13 @@ def create_callbacks(model, training_model, prediction_model, validation_generat
 
     if args.tensorboard_dir:
         tensorboard_callback = keras.callbacks.TensorBoard(
+            profile_batch=0,
             log_dir=args.tensorboard_dir,
             histogram_freq=1,
             batch_size=args.batch_size,
             write_graph=True,
             write_grads=False,
-            write_images=False,
+            write_images=True,
             embeddings_freq=0,
             embeddings_layer_names=None,
             embeddings_metadata=None
