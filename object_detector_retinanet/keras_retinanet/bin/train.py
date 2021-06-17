@@ -155,7 +155,7 @@ def create_callbacks(model, training_model, prediction_model, validation_generat
             write_graph            = True,
             write_grads            = False,
             write_images           = False,
-            update_freq            = update_freq,
+            update_freq            = 'batch',
             embeddings_freq        = 0,
             embeddings_layer_names = None,
             embeddings_metadata    = None
