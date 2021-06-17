@@ -378,6 +378,8 @@ def parse_args(args):
     parser.add_argument('--reduce-lr-factor', help='When learning rate is reduced due to reduce_lr_patience, multiply by reduce_lr_factor', type=float, default=0.1)
     parser.add_argument('--group-method',     help='Determines how images are grouped together', type=str, default='ratio', choices=['none', 'random', 'ratio'])
 
+    parser.add_argument('--tensorboard-dir',  help='Log directory for Tensorboard output', default='')  # default='./logs') => https://github.com/tensorflow/tensorflow/pull/34870
+    
     return check_args(parser.parse_args(args))
 
 
