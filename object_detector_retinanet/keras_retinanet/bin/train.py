@@ -23,7 +23,7 @@ import sys
 sys.path.insert(1,"/content/drive/My Drive/SKU110K_code")
 import time
 import warnings
-
+import tensorboardcolab as tb
 import keras
 import keras.preprocessing.image
 import tensorflow as tf
