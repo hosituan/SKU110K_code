@@ -145,7 +145,7 @@ def create_callbacks(model, training_model, prediction_model, validation_generat
 
     if args.tensorboard_dir:
         makedirs(args.tensorboard_dir)
-        update_freq = args.tensorboard_freq
+        update_freq = 'batch'
         if update_freq not in ['epoch', 'batch']:
             update_freq = int(update_freq)
         tensorboard_callback = keras.callbacks.TensorBoard(
