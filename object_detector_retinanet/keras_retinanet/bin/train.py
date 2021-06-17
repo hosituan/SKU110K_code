@@ -174,7 +174,9 @@ def create_callbacks(model, training_model, prediction_model, validation_generat
         callbacks.append(checkpoint)
 
     tbCallBack = tf.keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
-    callbacks.append(tbCallBack)
+    tbc = tb.TensorBoardColab()
+    tensorboardCallBack = tb.TensorBoardColabCallback(tbc)
+    callbacks.append(tensorboardCallBack)
     callbacks.append(keras.callbacks.ReduceLROnPlateau(
         monitor='loss',
         factor=0.1,
