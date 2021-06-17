@@ -144,16 +144,21 @@ def create_callbacks(model, training_model, prediction_model, validation_generat
     tensorboard_callback = None
 
     if args.tensorboard_dir:
+        makedirs(args.tensorboard_dir)
+        update_freq = args.tensorboard_freq
+        if update_freq not in ['epoch', 'batch']:
+            update_freq = int(update_freq)
         tensorboard_callback = keras.callbacks.TensorBoard(
             log_dir=args.tensorboard_dir,
-            histogram_freq=1,
-            batch_size=args.batch_size,
-            write_graph=True,
-            write_grads=False,
-            write_images=True,
-            embeddings_freq=0,
-            embeddings_layer_names=None,
-            embeddings_metadata=None
+            histogram_freq         = 0,
+            batch_size             = args.batch_size,
+            write_graph            = True,
+            write_grads            = False,
+            write_images           = False,
+            update_freq            = update_freq,
+            embeddings_freq        = 0,
+            embeddings_layer_names = None,
+            embeddings_metadata    = None
         )
         callbacks.append(tensorboard_callback)
 
@@ -171,17 +176,38 @@ def create_callbacks(model, training_model, prediction_model, validation_generat
         )
         checkpoint = RedirectModel(checkpoint, model)
         callbacks.append(checkpoint)
-    
+
+    if args.evaluation and validation_generator:
+        if args.dataset_type == 'coco':
+            from ..callbacks.coco import CocoEval
+
+            # use prediction model for evaluation
+            evaluation = CocoEval(validation_generator, tensorboard=tensorboard_callback)
+        else:
+            evaluation = Evaluate(validation_generator, tensorboard=tensorboard_callback, weighted_average=args.weighted_average)
+        evaluation = RedirectModel(evaluation, prediction_model)
+        callbacks.append(evaluation)
+
     callbacks.append(keras.callbacks.ReduceLROnPlateau(
-        monitor='loss',
-        factor=0.1,
-        patience=2,
-        verbose=1,
-        mode='auto',
-        epsilon=0.0001,
-        cooldown=0,
-        min_lr=0
+        monitor    = 'loss',
+        factor     = args.reduce_lr_factor,
+        patience   = args.reduce_lr_patience,
+        verbose    = 1,
+        mode       = 'auto',
+        min_delta  = 0.0001,
+        cooldown   = 0,
+        min_lr     = 0
     ))
+    if args.evaluation and validation_generator:
+        callbacks.append(keras.callbacks.EarlyStopping(
+            monitor    = 'mAP',
+            patience   = 5,
+            mode       = 'max',
+            min_delta  = 0.01
+        ))
+
+    if args.tensorboard_dir:
+        callbacks.append(tensorboard_callback)
 
     return callbacks
 
@@ -344,6 +370,13 @@ def parse_args(args):
                         default=800)
     parser.add_argument('--image-max-side', help='Rescale the image if the largest side is larger than max_side.',
                         type=int, default=1333)
+    parser.add_argument('--no-resize',        help='Don''t rescale the image.', action='store_true')
+    parser.add_argument('--config',           help='Path to a configuration parameters .ini file.')
+    parser.add_argument('--weighted-average', help='Compute the mAP using the weighted average of precisions among classes.', action='store_true')
+    parser.add_argument('--compute-val-loss', help='Compute validation loss during training', dest='compute_val_loss', action='store_true')
+    parser.add_argument('--reduce-lr-patience', help='Reduce learning rate after validation loss decreases over reduce_lr_patience epochs', type=int, default=2)
+    parser.add_argument('--reduce-lr-factor', help='When learning rate is reduced due to reduce_lr_patience, multiply by reduce_lr_factor', type=float, default=0.1)
+    parser.add_argument('--group-method',     help='Determines how images are grouped together', type=str, default='ratio', choices=['none', 'random', 'ratio'])
 
     return check_args(parser.parse_args(args))
 
